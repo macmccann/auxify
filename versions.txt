@@ -1,0 +1,50 @@
+Version 0.1:
+On localhost, have:
+	intro page -> login
+	callback page:
+		creates new playlist called "test"
+		displays contents of "test"
+		runs playback on "test"
+		links allow users to queue up 3 different songs to "test"
+
+Version 0.2:
+On webserver, do all of the above
+
+Version 0.3:
+On webserver, have:
+	intro page -> login
+	callback page:
+		creates new playlist called "test"
+		search bar allows users to queue up a song of their choosing,
+			but they can only queue songs every 5 mins
+
+Version 0.4:
+On webserver, have:
+	intro page -> login
+	callback page:
+		asks user which playlist they want to fallback to
+		search bar allows users to queue up a song of their choosing,
+			but they can only queue once their previous queued song
+			has finished
+
+Version 0.5:
+On webserver, have:
+	1) Hosts login page -> login
+	   callback page:
+	   	asks user which playlist they want to fallback to
+	   host playback page:
+		displays all songs queued, up next, id for people to join,
+		search bar to queue, queue button
+	2) Join page:
+	   	joiners input the id to join a hangout
+	   playback page:
+		displays all songs queued, up next, id, search bar, queue button
+
+Version 0.6:
+UI
+
+Version 0.7:
+Mobile App
+
+Version 8:
+Features
