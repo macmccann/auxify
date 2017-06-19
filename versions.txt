@@ -46,5 +46,5 @@ UI
 Version 0.7:
 Mobile App
 
-Version 8:
+Version 0.8:
 Features
