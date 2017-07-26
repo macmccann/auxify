@@ -1,0 +1,44 @@
+
+	 _____       __      __    ___      ___     _      __________   ___      ___
+       /  ___  \    |  |    |  |   \  \    /  /    |_|    |   _______|  \  \    /  /
+      |  |   |  |   |  |    |  |    \  \  /  /            |  |           \  \  /  /
+      |  |   |  |   |  |    |  |     \  \/  /       |     |  |______      \  \/  /
+      |  |___|  |   |  |    |  |      |    |       |_|    |   ______|      \    /
+      |   ___   |   |  |____|  |     /  /\  \     |___|   |  |              |  |
+      |  |   |  |   \          /    /  /  \  \    |___|   |  |              |  |
+      |__|   |__|    \________/    /__/    \__\   |___|   |__|              |__|
+
+      1 _________________________                      2  ___________________________________
+       |   PLAYLIST SONG LIST    |                       |Search...                          |
+       |    SONG    |  ADDED BY  |                       |___________________________________|
+       |  All Star  |   smluva   |                       
+       |     ...    |    ...     |                     3 Search Results:
+       |____________|____________|                       Ignition (Remix)             R. Kelly
+                                                         Ignition - Remix             R. Kelly
+                                                         Ignition                     R. Kelly
+             4                                           Ignition                William Singe
+                Candyman                                                  ...
+      Zedd, Aloe Blacc - Candyman
+             ______________
+          5 |  Queue Song  |                           6 Alert: You have a song in the queue
+            |______________|                             right now (Sound & Color). You must
+                                                         wait until this song has played
+                                                         before you can queue another song.
+
+1 - comes from dynamically updated get request to auxify.fm
+2 - html search bar, gives get request to spotify api
+3 - search results, returned from (2) from spotify api - also act as clickable links to get info about songs
+4 - song info, received from the get request from (3)
+5 - HTML button, gives post request to auxify.fm
+6 - Appears if post request to auxify.fm returns a bad response
+
+Requests involved
+1) browser -> auxify GET playlist
+2) auxify <- browser GET playlist
+2) auxify -> spotify GET playlist
+3) browser -> spotify GET search results
+4) browser -> spotify GET song info
+5) browser -> auxify POST song queue
+6) auxify <- browser POST song queue
+7) auxify -> spotify POST song queue
+ 

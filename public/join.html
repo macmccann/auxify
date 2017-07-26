@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Auxify</title>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <style type="text/css">
+            .text-overflow {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <p>Join a current Auxify session here:</p>
+        <form action="">
+            Session ID: <input type="text" id="sessionID" name="sessionID"><br>
+        </form>
+
+        <button type="button" onclick="submitSessionID()">Submit</button>
+
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script>
+        function submitSessionID() {
+            var sessionIDField = document.getElementById("sessionID");
+            var sessionID = sessionIDField.value;
+            console.log("sessionID: " + sessionID);
+
+            $.ajax({
+                method: 'GET',
+                url: 'http://localhost:8888/join/sessionID/' + sessionID
+            }).done(function(data) {
+                console.log('redirect: ' + data.redirect);
+                if(data.redirect){
+                    window.location = data.redirect;
+                }
+            });
+        }
+        </script>
+    </body>
+</html>

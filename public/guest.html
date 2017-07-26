@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Auxify</title>
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <style type="text/css">
+            .text-overflow {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                width: 500px;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="container">
+            <div id="error">
+                <p>There was an error. Try <a href="/join.html">joining</a> a session.
+            </div>
+            <div id="dashboard">
+                <div id="dashboard-info">
+                </div>
+                <div id="queueing-error">
+                </div>
+            </div>
+        </div>
+
+        <script id="dashboard-info-template" type="text/x-handlebars-template">
+            <h1>Session ID is {{session_id}}</h1>
+            <p><a href="#" onclick="addAllStar()">Add song 'All Star' by 'Smash Mouth' to playlist</a></p>
+            <p><a href="#" onclick="addSandstorm()">Add song 'Sandstorm' by 'Darude' to playlist</a></p>
+            <p><a href="#" onclick="addShootingStars()">Add song 'Shooting Stars' by 'Bag Raiders' to playlist</a></p>
+        </script>
+
+        <p id="error-message"></p>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+
+        <script>
+
+        var sessionID = null;
+
+        /**
+        * Obtains parameters from the hash of the URL
+        * @return Object
+        */
+        function getHashParams() {
+            var hashParams = {};
+            var e, r = /([^&;=]+)=?([^&;]*)/g,
+            q = window.location.hash.substring(1);
+            while ( e = r.exec(q)) {
+                hashParams[e[1]] = decodeURIComponent(e[2]);
+            }
+            return hashParams;
+        }
+
+        (function() {
+
+            var dashboardInfoSource = document.getElementById('dashboard-info-template').innerHTML,
+            dashboardInfoTemplate = Handlebars.compile(dashboardInfoSource),
+            dashboardInfoPlaceholder = document.getElementById('dashboard-info');
+
+            var params = getHashParams();
+
+            session_id = params.sessionid;
+
+            error = params.error;
+
+
+            if (error) {
+                alert('There was an error during the authentication');
+            } else {
+                if (session_id) {
+                    var context = { session_id };
+                    dashboardInfoPlaceholder.innerHTML = dashboardInfoTemplate(context);
+                    $('#dashboard').show();
+                    $('#error').hide();
+                } else {
+                    $('#error').show();
+                    $('#dashboard').hide();
+                }
+            }
+        })();
+
+
+        //adds all star to the auxify playlist
+        function addAllStar(){
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8888/queue/sessionid/' + session_id + '/songuri/spotify:track:3cfOd4CMv2snFaKAnMdnvK'
+            }).done(function(data) {
+                if(data.error){
+                    document.getElementById('queuing-error').innerHTML = `<p>${data.error}</p>`;
+                }
+            });
+        }
+
+        //adds sandstorm to the auxify playlist
+        function addSandstorm(){
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8888/queue/sessionid/' + session_id + '/songuri/spotify:track:2SG0RPcyWgUPqLCKWLtYc1'
+            }).done(function(data) {
+                if(data.error){
+                    document.getElementById('queuing-error').innerHTML = `<p>${data.error}</p>`;
+                }
+            });
+        }
+
+        //adds shooting stars to the auxify playlist
+        function addShootingStars(){
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:8888/queue/sessionid/' + session_id + '/songuri/spotify:track:0UeYCHOETPfai02uskjJ3x'
+            }).done(function(data) {
+                if(data.error){
+                    document.getElementById('queuing-error').innerHTML = `<p>${data.error}</p>`;
+                }
+            });
+        }
+
+
+        </script>
+    </body>
+</html>
