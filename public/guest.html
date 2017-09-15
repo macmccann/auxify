@@ -31,9 +31,32 @@
 
         <script id="dashboard-info-template" type="text/x-handlebars-template">
             <h1>Session ID is {{session_id}}</h1>
-            <p><a href="#" onclick="addAllStar()">Add song 'All Star' by 'Smash Mouth' to playlist</a></p>
-            <p><a href="#" onclick="addSandstorm()">Add song 'Sandstorm' by 'Darude' to playlist</a></p>
-            <p><a href="#" onclick="addShootingStars()">Add song 'Shooting Stars' by 'Bag Raiders' to playlist</a></p>
+            <a onclick="refreshPlaylist()" class="btn btn-primary">Refresh Playlist</a>
+            <a onclick="endSession()" class="btn btn-primary">End Session</a>
+            
+            <p style="color: red" id="queueing-error"></p>
+
+            <input type="text" id="search-track" name="search-track"><br>
+            <a onclick="searchTrack()" class="btn btn-primary">Search Track</a>
+
+            <h3>Search Results</h3>
+            <table style="width:100%" id="search-result-table">
+                <tr>
+                    <th>Artist</th>
+                    <th>Song</th>
+                </tr>
+            </table>
+
+            <h3>Queue</h3>
+            
+            <table style="width:100%" id="playlist-track-table">
+                <tr>
+                    <th>Name</th>
+                    <th>Artist</th> 
+                    <th>isQueued</th>
+                </tr>
+            </table>
+
         </script>
 
         
@@ -44,6 +67,7 @@
         <script>
 
         var sessionID = null;
+        var searchResults = [];
 
         /**
         * Obtains parameters from the hash of the URL
@@ -85,63 +109,77 @@
                     $('#dashboard').hide();
                 }
             }
+
+            refreshPlaylist();
         })();
 
+        // --------------------------------------------- HELPERS ------------------------------------------ \\
 
-        //adds all star to the auxify playlist
-        function addAllStar(){
+        function refreshPlaylist() {
             $.ajax({
-                type: 'POST',
-                url: 'http://localhost:8888/queue/sessionid/' + session_id + '/songuri/spotify:track:3cfOd4CMv2snFaKAnMdnvK'
+                type: 'GET',
+                url: 'http://localhost:8888/playlist/sessionid/' + session_id
             }).done(function(data) {
-                if(data.error){
-                    console.log('data.error: ' + data.error);
-                    $(document.getElementById('error-message')).stop();
-                    document.getElementById('error-message').innerHTML = `<p>${data.error}</p>`;
-                    document.getElementById('error-message').style.display = 'block';                  
-                    document.getElementById('error-message').style.opacity = 1.0;
-                    $(document.getElementById('error-message')).fadeOut(2000);
+                var playlistTrackTableHTML = '<tr><th>Name</th><th>Artist</th><th>isQueued</th></tr>';
+                data.playlistTracks.forEach(function(playlistTrack) {
+                    playlistTrackTableHTML += '<tr><td>' + playlistTrack.name + '</td><td>' + playlistTrack.artist + '</td><td>' + playlistTrack.isQueued + '</td></tr>'
+                });
+                table = document.getElementById('playlist-track-table');
+                table.innerHTML = playlistTrackTableHTML;
+            })
+        }
+
+        function searchTrack() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8888/search/sessionid/' + session_id + '/q/' + document.getElementById('search-track').value,
+            }).done(function(data) {
+                if(data.error) {
+                    console.log('ERROR: ' + JSON.stringify(data.error));
+                } else {
+                    var searchResultsTableHTML = '<tr><th>Artist</th><th>Song</th><th></th></tr>';
+                    for (var i = 0; i < data.body.tracks.items.length; i++) {
+                        searchResultsTableHTML += '<tr><td>' + data.body.tracks.items[i].artists[0].name + '</td><td>' + data.body.tracks.items[i].name + '</td><td>'
+                            + '<p><a onclick=queueSearchedSong(' + i + ') class="btn btn-secondary">Queue</a></p></td></tr>';
+                        searchResults[i] = {
+                            name: data.body.tracks.items[i].name,
+                            uri: data.body.tracks.items[i].uri
+                        }
+                    }
+                    table = document.getElementById('search-result-table');
+                    table.innerHTML = searchResultsTableHTML;
                 }
-                refreshPlaylist();
             });
         }
 
-        //adds sandstorm to the auxify playlist
-        function addSandstorm(){
+        function queueSearchedSong(i) {
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8888/queue/sessionid/' + session_id + '/songuri/spotify:track:2SG0RPcyWgUPqLCKWLtYc1'
+                url: 'http://localhost:8888/queue/sessionID/' + session_id + '/songURI/' + searchResults[i].uri
             }).done(function(data) {
                 if(data.error){
-                    console.log('data.error: ' + data.error);
-                    $(document.getElementById('error-message')).stop();
-                    document.getElementById('error-message').innerHTML = `<p>${data.error}</p>`;
-                    document.getElementById('error-message').style.display = 'block';                  
-                    document.getElementById('error-message').style.opacity = 1.0;
-                    $(document.getElementById('error-message')).fadeOut(2000);
+                    $(document.getElementById('queueing-error')).stop();
+                    document.getElementById('queueing-error').innerHTML = `<p>${data.error}</p>`;
+                    document.getElementById('queueing-error').style.display = 'block';                  
+                    document.getElementById('queueing-error').style.opacity = 1.0;
+                    $(document.getElementById('queueing-error')).fadeOut(2000);
                 }
                 refreshPlaylist();
+            }).fail(function() {
+                console.log('fail');
             });
         }
 
-        //adds shooting stars to the auxify playlist
-        function addShootingStars(){
+        function endSession() {
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8888/queue/sessionid/' + session_id + '/songuri/spotify:track:0UeYCHOETPfai02uskjJ3x'
+                url: 'http://localhost:8888/endsession/sessionID/' + session_id
             }).done(function(data) {
-                if(data.error){
-                    console.log('data.error: ' + data.error);
-                    $(document.getElementById('error-message')).stop();
-                    document.getElementById('error-message').innerHTML = `<p>${data.error}</p>`;
-                    document.getElementById('error-message').style.display = 'block';                  
-                    document.getElementById('error-message').style.opacity = 1.0;
-                    $(document.getElementById('error-message')).fadeOut(2000);
+                if (data.success) {
+                    window.location = '/index.html';
                 }
-                refreshPlaylist();
             });
         }
-
 
         </script>
     </body>
