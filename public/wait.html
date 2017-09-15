@@ -16,7 +16,9 @@
         <link href="css/playlist.css" rel="stylesheet">
     </head>
     <body>
-        <p class="mt-5">Start playing the playlist you chose on any Spotify device, and we'll do the rest!</p>
+        <div id="para">
+        </div>
+        
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script>
             function getHashParams() {
@@ -33,6 +35,9 @@
                 var params = getHashParams();
 
                 sessionID = params['session_id'];
+
+                document.getElementById("para").innerHTML = 
+                  "<p class=\"mt-5\">We made a playlist for you called auxify-" + sessionID + ". Start playing the playlist you chose on any Spotify device, and we'll do the rest!</p>"
 
                 $.ajax({
                     type: 'GET',

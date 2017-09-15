@@ -113,6 +113,20 @@ function join(req, res) {
   }
 }
 
+function getQuery(req, res) {
+  if (Object.keys(sessions).indexOf(req.params.sid) !== -1) {
+    spotifyApi.setAccessToken(sessions[req.params.sid].accessToken);
+    spotifyApi.searchTracks(req.params.query)
+      .then((data) => {
+        res.send(data);
+      }, (err) => {
+        res.send({ error: err });
+      });
+  } else {
+    res.send({ error: 'Session did not exist.' });
+  }
+}
+
 const app = express();
 
 app.use(express.static(`${__dirname}/public`))
@@ -140,7 +154,6 @@ app.get('/callback', (req, res) => {
 });
 
 app.post('/chooseplaylist/sessionid/:sid/playlisturi/:puri', (req, res) => {
-  console.log('choosing playlist!');
   choosePlaylist(req, res, sessions, spotifyApi);
 });
 
@@ -159,6 +172,10 @@ app.get('/playlist/sessionid/:sID', (req, res) => {
   } else {
     res.status(500).send({ error: 'session does not exist' });
   }
+});
+
+app.get('/search/sessionid/:sid/q/:query', (req, res) => {
+  getQuery(req, res);
 });
 
 console.log('Listening on 8888');

@@ -34,8 +34,9 @@
             
             $.ajax({
                 method: 'GET',
-                url: 'http://192.168.1.74:8888/join/sessionID/' + sessionID
+                url: 'http://localhost:8888/join/sessionID/' + sessionID
             }).done(function(data) {
+                console.log('data: ' + JSON.stringify(data));
                 if(data.redirect){
                     window.location = data.redirect;
                 }
