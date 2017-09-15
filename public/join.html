@@ -34,7 +34,7 @@
             
             $.ajax({
                 method: 'GET',
-                url: 'http://localhost:8888/join/sessionID/' + sessionID
+                url: 'http://auxify.us/join/sessionID/' + sessionID
             }).done(function(data) {
                 console.log('data: ' + JSON.stringify(data));
                 if(data.redirect){

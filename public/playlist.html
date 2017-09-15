@@ -106,7 +106,7 @@
         var plObj = playlistsObj["playlist" + value];
         $.ajax({
             type: 'POST',
-            url: 'http://localhost:8888/chooseplaylist/sessionid/' + sessionID + '/playlisturi/' + plObj.uri
+            url: 'http://auxify.us/chooseplaylist/sessionid/' + sessionID + '/playlisturi/' + plObj.uri
         }).done(function(data) {
             if(data.redirect){
                 window.location = data.redirect;

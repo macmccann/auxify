@@ -15,7 +15,7 @@ const SpotifyWebApi = require('spotify-web-api-node');
 
 const clientId = process.env.CLIENT_ID;
 const clientSecret = process.env.CLIENT_SECRET;
-const redirectUri = 'http://localhost:8888/callback'; // The redirect URI
+const redirectUri = 'http://auxify.us/callback'; // The redirect URI
 const spotifyApi = new SpotifyWebApi({
   clientId,
   clientSecret,

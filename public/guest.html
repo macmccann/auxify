@@ -118,7 +118,7 @@
         function refreshPlaylist() {
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:8888/playlist/sessionid/' + session_id
+                url: 'http://auxify.us/playlist/sessionid/' + session_id
             }).done(function(data) {
                 var playlistTrackTableHTML = '<tr><th>Name</th><th>Artist</th><th>isQueued</th></tr>';
                 data.playlistTracks.forEach(function(playlistTrack) {
@@ -132,7 +132,7 @@
         function searchTrack() {
             $.ajax({
                 type: 'GET',
-                url: 'http://localhost:8888/search/sessionid/' + session_id + '/q/' + document.getElementById('search-track').value,
+                url: 'http://auxify.us/search/sessionid/' + session_id + '/q/' + document.getElementById('search-track').value,
             }).done(function(data) {
                 if(data.error) {
                     console.log('ERROR: ' + JSON.stringify(data.error));
@@ -155,7 +155,7 @@
         function queueSearchedSong(i) {
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8888/queue/sessionID/' + session_id + '/songURI/' + searchResults[i].uri
+                url: 'http://auxify.us/queue/sessionID/' + session_id + '/songURI/' + searchResults[i].uri
             }).done(function(data) {
                 if(data.error){
                     $(document.getElementById('queueing-error')).stop();
@@ -173,7 +173,7 @@
         function endSession() {
             $.ajax({
                 type: 'POST',
-                url: 'http://localhost:8888/endsession/sessionID/' + session_id
+                url: 'http://auxify.us/endsession/sessionID/' + session_id
             }).done(function(data) {
                 if (data.success) {
                     window.location = '/index.html';
