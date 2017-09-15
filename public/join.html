@@ -14,29 +14,39 @@
     </head>
     <body>
         <p>Join a current Auxify session here:</p>
-        <form action="">
-            Session ID: <input type="text" id="sessionID" name="sessionID"><br>
-        </form>
-
-        <button type="button" onclick="submitSessionID()">Submit</button>
+        <input type="text" id="sessionID" name="sessionID"><br>
+        <a id="submitSession" class="btn btn-primary">Submit</a>
 
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script>
+        function httpGetAsync(theUrl, callback){
+            var xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() { 
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+                    callback(xmlHttp.responseText);
+            }
+            xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+            xmlHttp.send(null);
+        }
         function submitSessionID() {
             var sessionIDField = document.getElementById("sessionID");
             var sessionID = sessionIDField.value;
-            console.log("sessionID: " + sessionID);
-
+            
             $.ajax({
                 method: 'GET',
-                url: 'http://localhost:8888/join/sessionID/' + sessionID
+                url: 'http://192.168.1.74:8888/join/sessionID/' + sessionID
             }).done(function(data) {
-                console.log('redirect: ' + data.redirect);
                 if(data.redirect){
                     window.location = data.redirect;
                 }
             });
         }
+
+        $(document).ready(function(){
+            $('#submitSession').on('click touchstart', function() {
+                submitSessionID();
+            });
+        });
         </script>
     </body>
 </html>

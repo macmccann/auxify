@@ -1,157 +1,47 @@
-<!doctype html>
-<html>
-    <head>
-        <title>Auxify</title>
-        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-        <style type="text/css">
-            #login, #loggedin {
-                display: none;
-            }
-            .text-overflow {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                width: 500px;
-            }
-        </style>
-    </head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
 
-<body>
-    <div class="container">
-        <div id="login">
-            <h1>Auxify login</h1>
-            <a href="/login" class="btn btn-primary">Log in with Spotify</a>
+    <title>Auxify</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/index.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <div class="masthead clearfix">
+          </div>
+          <div class="inner cover">
+            <h1 class="cover-heading">Welcome to Auxify.</h1>
+            <p class="lead">Auxify is an application that makes it easy to play music with your friends and make sure that everybody gets a chance to hear the music they like. All it takes to get started is a Spotify premium account and a friend. Click below to start enjoying Auxify!</p>
+            <p class="lead">
+              <a href="/login" class="btn btn-lg btn-secondary">Get Started</a>
+            </p>
+          </div>
         </div>
-        <div id="loggedin">
-            <div id="user-profile">
-            </div>
-            <div id="queueing-error">
-            </div>
-        </div>
+      </div>
     </div>
 
-    <script id="user-profile-template" type="text/x-handlebars-template">
-        <h1>Logged in as {{display_name}}</h1>
-        <h1>User ID is {{user_id}}</h1>
-        <h1>Session ID is {{session_id}}</h1>
-        <h2>Made a playlist for you called Auxify Playlist!</h2>
-        <p><a href="#" onclick="addAllStar()">Add song 'All Star' by 'Smash Mouth' to playlist</a></p>
-        <p><a href="#" onclick="addSandstorm()">Add song 'Sandstorm' by 'Darude' to playlist</a></p>
-        <p><a href="#" onclick="addShootingStars()">Add song 'Shooting Stars' by 'Bag Raiders' to playlist</a></p>
-    </script>
-
-    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script>
-
-    var webID = null;
-    var playlistID = null;
-    var playlistURI = null;
-    var access_token = null;
-    var refresh_token = null;
-    var error = null;
-
-    /**
-    * Obtains parameters from the hash of the URL
-    * @return Object
-    */
-    function getHashParams() {
-        var hashParams = {};
-        var e, r = /([^&;=]+)=?([^&;]*)/g,
-        q = window.location.hash.substring(1);
-        while ( e = r.exec(q)) {
-            hashParams[e[1]] = decodeURIComponent(e[2]);
-        }
-        return hashParams;
-    }
-
-    (function() {
-        var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-        userProfileTemplate = Handlebars.compile(userProfileSource),
-        userProfilePlaceholder = document.getElementById('user-profile');
-
-        var params = getHashParams();
-
-        display_name = params.displayname;
-        user_id = params.userid;
-        session_id = params.sessionid;
-
-        error = params.error;
-
-
-        if (error) {
-            alert('There was an error during the authentication');
-        } else {
-            if (display_name && user_id && session_id) {
-                var context = { display_name, user_id, session_id };
-                userProfilePlaceholder.innerHTML = userProfileTemplate(context);
-                $('#loggedin').show();
-                $('#login').hide();
-                refreshPlaylist();
-
-// ----------------------------------- SHOW INITIAL SCREEN HERE!!! -------------------------------- \\
-            } else {
-                // render initial screen
-                $('#login').show();
-                $('#loggedin').hide();
-            }
-        }
-    })();
-
-
-// --------------------------------------------- HELPERS ------------------------------------------ \\
-
-    //adds all star to the auxify playlist
-    function addAllStar(){
-        $.ajax({
-            type: 'POST',
-            url: 'http://localhost:8888/queue/sessionID/' + session_id + '/songURI/spotify:track:3cfOd4CMv2snFaKAnMdnvK'
-        }).done(function(data) {
-            if(data.error){
-                console.log('data.error: ' + data.error);
-                $('#queuing-error').innerHTML = `<p>${data.error}</p>`;
-                $('#queuing-error').show();
-            }
-        });
-    }
-
-    //adds sandstorm to the auxify playlist
-    function addSandstorm(){
-        $.ajax({
-            type: 'POST',
-            url: 'http://localhost:8888/queue/sessionID/' + session_id + '/songURI/spotify:track:2SG0RPcyWgUPqLCKWLtYc1'
-        }).done(function(data) {
-            if(data.error){
-                console.log('data.error: ' + data.error);
-                $('#queuing-error').innerHTML = `<p>${data.error}</p>`;
-                $('#queuing-error').show();
-            }
-        });
-    }
-
-    //adds shooting stars to the auxify playlist
-    function addShootingStars(){
-        $.ajax({
-            type: 'POST',
-            url: 'http://localhost:8888/queue/sessionID/' + session_id + '/songURI/spotify:track:0UeYCHOETPfai02uskjJ3x'
-        }).done(function(data) {
-            if(data.error){
-                console.log('data.error: ' + data.error);
-                $('#queuing-error').innerHTML = `<p>${data.error}</p>`;
-                $('#queuing-error').show();
-            }
-        });
-    }
-
-    // function refreshPlaylist(){
-    //     $.ajax({
-    //         type: 'GET',
-    //         URL: 'http://localhost:8888/playlist/userID/' + user_id
-    //     }).done(function(data) {
-    //
-    //     })
-    // }
-
-    </script>
-    </body>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>
