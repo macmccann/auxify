@@ -124,6 +124,7 @@ module.exports = function callback(req, res, stateKey, spotifyApi, sessions, con
     res.redirect(`/#${
       querystring.stringify({
         error: 'state_mismatch',
+        state: JSON.stringify(state),
       })}`);
   } else {
     initializeAuxify(code, req, res, stateKey, spotifyApi, sessions, connectionConfig);
