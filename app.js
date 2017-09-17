@@ -22,6 +22,7 @@ const spotifyApi = new SpotifyWebApi({
   redirectUri,
 });
 const stateKey = 'spotify_auth_state';
+const port = process.env.PORT || 8888;
 
 /**
 @typedef {object} queuedTrack
@@ -178,5 +179,5 @@ app.get('/search/sessionid/:sid/q/:query', (req, res) => {
   getQuery(req, res);
 });
 
-console.log('Listening on 8888');
-app.listen(8888);
+console.log('Listening on ' + port);
+app.listen(port);
