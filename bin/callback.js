@@ -117,16 +117,16 @@ module.exports = function callback(req, res, stateKey, spotifyApi, sessions, con
   // after checking the state parameter
 
   const code = req.query.code || null;
-  const state = req.query.state || null;
-  const storedState = req.cookies ? req.cookies[stateKey] : null;
+  // const state = req.query.state || null;
+  // const storedState = req.cookies ? req.cookies[stateKey] : null;
 
-  if (state === null || state !== storedState) {
-    res.redirect(`/#${
-      querystring.stringify({
-        error: 'state_mismatch',
-        state: JSON.stringify(state),
-      })}`);
-  } else {
-    initializeAuxify(code, req, res, stateKey, spotifyApi, sessions, connectionConfig);
-  }
+  // if (state === null || state !== storedState) {
+  //   res.redirect(`/#${
+  //     querystring.stringify({
+  //       error: 'state_mismatch',
+  //       state: JSON.stringify(state),
+  //     })}`);
+  // } else {
+  initializeAuxify(code, req, res, stateKey, spotifyApi, sessions, connectionConfig);
+  // }
 };
